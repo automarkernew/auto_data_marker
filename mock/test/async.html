@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let b = "bsdf"
+        function fnB(){
+            console.log("开始执行方法B");
+            setInterval(()=>{
+               return "fnB return1"
+            },1000)
+            return "fnB return2"
+        }
+        async function queryB() {
+            console.log("开始执行方法queryB");
+            const res = await fnB();
+            console.log("res", res);
+        }
+        queryB();
+        console.log("b", b);
+
+        function fnA(){
+            console.log("开始执行方法A");
+            async function fnC(){
+                console.log("开始执行方法C");
+                const resC = await fnB();
+                console.log("resC",resC);
+            }
+            fnC();
+        }
+        fnA();
+        console.log("fnA end");
+
+    
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+{
+    "/videoInformation/query":"/videoInformationquery",
+    "/videoInformation/create":"/videoInformationcreate",
+    "/visibleTagging/upload":"/visibleTaggingupload",
+    "/TargetTrack/getList":"/TargetTrackgetlist"
+}
