@@ -3,6 +3,8 @@ import router from "@/router";
 import { ElMessage } from "element-plus";
 import store from "@/store"
 export const HTTP_REG = /^https?:/;
+export const MINIO = 'http://localhost:8081/view/';
+export const TOKEN=store.state.token.token;
 
 export async function request(config) {
   console.log("准备发送的数据",config.data);

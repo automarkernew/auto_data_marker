@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ElMessage } from "element-plus";
 export default {
   name: "uploadVideo",
@@ -262,8 +262,10 @@ export default {
       } else {
         // 可见光等一般文件
         // 判断文件类型
+        console.log(file.raw.type)
         if (
           [
+            "video/x-msvideo",
             "video/mp4",
             "video/ogg",
             "video/flv",

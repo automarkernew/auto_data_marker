@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ElMessage } from "element-plus";
 
 export default {
@@ -289,7 +289,7 @@ export default {
           this.fileList = res.data.VisibleTaggingLoadFileRsp;
           this.fileList.forEach((rec) => {
             rec.imgUrl =
-              "http://localhost:9000" + rec.imageUrl + rec.frame + ".jpg";
+              MINIO + rec.imageUrl + rec.frame + ".jpg?token="+TOKEN;
           });
         } else {
           this.$message.error("请求标注文件失败");

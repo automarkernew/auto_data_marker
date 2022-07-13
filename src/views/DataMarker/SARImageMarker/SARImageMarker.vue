@@ -121,7 +121,7 @@ import MarkNumber from "../DataMarkerAction/MarkNumber.vue";
 import ManualClassification from "../DataMarkerAction/ManualClassification.vue";
 import MarkerDrawer from "../DataMarkerAction/MarkerDrawer.vue";
 import ClassificationQuery from "../DataMarkerAction/ClassificationQuery.vue";
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ArrowDown } from "@element-plus/icons-vue";
 import WaitForRespond from "../DataMarkerAction/WaitForRespond.vue";
 export default{
@@ -208,7 +208,7 @@ export default{
         // console.log(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length))
         if(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length)==videoId){
           const imgPath ={
-            src:"http://localhost:9000/img/"+videoId+"/"+i+".jpg",
+            src:MINIO+"img/"+videoId+"/"+i+".jpg?token="+TOKEN,
             index: i
           }
           this.imgArr.push(imgPath)

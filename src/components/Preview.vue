@@ -85,7 +85,7 @@ export default {
   props: ["videoInfo"],
   updated() {
     this.showFilename = this.$props.videoInfo.videoName;
-    this.showVideoUrl = "http://localhost:9000"+this.$props.videoInfo.tagImgUrl+"/1.jpg"
+    this.showVideoUrl = "http://localhost:8081/view/"+this.$props.videoInfo.tagImgUrl+"/1.jpg?token="+TOKEN //"http://localhost:8081/view/img/"+ videoId + "/" + i + ".jpg?token="+store.state.token.token,
     let judgeType = this.showVideoUrl.split(".").pop();  // 获取文件后缀
     this.showShootTime = this.myhandleTimestamp(this.$props.videoInfo.shootTime);
     this.showShootPlace = this.$props.videoInfo.shootPlace;

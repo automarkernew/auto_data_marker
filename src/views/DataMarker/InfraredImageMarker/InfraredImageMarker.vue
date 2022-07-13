@@ -74,7 +74,7 @@
 import AILabel from 'ailabel'
 import { ElMessage } from "element-plus";
 import MarkerArea from '../DataMarkerAction/MarkerArea.vue'
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ArrowDown } from '@element-plus/icons-vue'
 import WaitForRespond from '../DataMarkerAction/WaitForRespond.vue'
 import ClassificationQuery from "../DataMarkerAction/ClassificationQuery.vue";
@@ -143,6 +143,7 @@ export default{
   },
   methods: {
     getFrameNumber(videoId){
+      this.imgArr=[]
       const files = require.context("/home/hdtx/code/minio_server/motimg", true, /.jpg$/).keys();
         // console.log(files)
         var i=1
@@ -151,13 +152,14 @@ export default{
         // console.log(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length))
         if(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length)==videoId){
           const imgPath ={
-          src:"http://localhost:9000/img/"+videoId+"/"+i+".jpg",
+          src: MINIO +"img/"+videoId+"/"+i+".jpg",
             index: i
           }
           this.imgArr.push(imgPath)
           i++
         }
       })
+      console.log("==============================",i)
       return i-1
     },
     async initVideo(VideoId){

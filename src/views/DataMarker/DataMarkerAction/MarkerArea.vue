@@ -13,7 +13,7 @@
 <script>
 import AILabel from 'ailabel'
 import { ElMessage } from "element-plus";
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import okImg from "../../../assets/tools/ok.png"
 import infoImg from "../../../assets/tools/info.png"
 import targetTrackImg from "../../../assets/tools/targetTrack.png"
@@ -67,11 +67,11 @@ export default {
             this.imgWidth=videoInformation.width
             this.frame=frame
             if(option=="mark"){
-                this.imageUrl="http://localhost:9000/img/"+this.videoId+"/"+frame+".jpg"
+                this.imageUrl=MINIO+"img/"+this.videoId+"/"+frame+".jpg?token="+TOKEN
             }
             else if(option=="track"){
                 var timestamp = Date.parse(new Date())
-                this.imageUrl="http://localhost:9000/motimg/"+this.videoId+"/"+frame+".jpg"+"?"+timestamp
+                this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"+"?"+timestamp+"?token="+TOKEN
             }
             console.log("imgheight:",this.imgHeight,"imgwidth:",this.imgWidth)
             this.destroyMap()

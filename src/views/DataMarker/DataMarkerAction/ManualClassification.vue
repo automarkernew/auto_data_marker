@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ElMessage } from "element-plus";
 import TrackDetail from "./TrackDetail.vue";
 

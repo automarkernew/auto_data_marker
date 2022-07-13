@@ -183,9 +183,11 @@ import MarkNumber from "../DataMarkerAction/MarkNumber.vue";
 import ManualClassification from "../DataMarkerAction/ManualClassification.vue";
 import MarkerDrawer from "../DataMarkerAction/MarkerDrawer.vue";
 import ClassificationQuery from "../DataMarkerAction/ClassificationQuery.vue";
-import { request } from "../../../js/axiosResquest.js";
+import { request,MINIO,TOKEN} from "../../../js/axiosResquest.js";
 import { ArrowDown } from "@element-plus/icons-vue";
 import WaitForRespond from "../DataMarkerAction/WaitForRespond.vue";
+import store from "@/store"
+
 export default {
   name: "DataMarker",
   components: {
@@ -288,9 +290,10 @@ export default {
         var tmp = filePath.substring(0, filePath.lastIndexOf("/"));
         if (tmp.substring(tmp.lastIndexOf("/") + 1, tmp.length) == videoId) {
           const imgPath = {
-            src: "http://localhost:9000/img/" + videoId + "/" + i + ".jpg",
+            src: MINIO+"img/"+ videoId + "/" + i + ".jpg?token="+store.state.token.token,
             index: i,
           };
+          console.log(imgPath)
           this.imgArr.push(imgPath);
           i++;
         }
@@ -526,6 +529,7 @@ export default {
           this.option
         );
         this.$refs.markerarea.tracker(this.frame);
+        this.refreshClassificationQuery()
       } catch (error) {
         console.log(error);
       }

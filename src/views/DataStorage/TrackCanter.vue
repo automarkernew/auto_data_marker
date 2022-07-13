@@ -226,7 +226,7 @@
 </template>
 
 <script>
-import { request } from "@/js/axiosResquest.js";
+import { request,MINIO,TOKEN } from "@/js/axiosResquest.js";
 import MarkPic from "@/components/MarkPic.vue";
 export default {
   components: {
@@ -484,7 +484,7 @@ export default {
         let tempImageUrlList = tempContentItem.imageUrlList;
         tempImageUrlList.forEach(
           (item, index)=>{
-            tempContentItem.imageUrlList[index] = "http://localhost:9000"+item;
+            tempContentItem.imageUrlList[index] = MINIO+item+"?token="+TOKEN;
             // console.log(tempContentItem.imageUrlList[index] );
           }
         );

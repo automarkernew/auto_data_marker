@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 import { ElMessage } from "element-plus";
 import TrackDetail from "./TrackDetail.vue";
 import AILabel from "ailabel";
@@ -114,6 +114,7 @@ export default {
       this.videoInformation = videoInformation;
       this.option = "track";
       this.getObjectType();
+      this.searchByType("")
     },
     // 获取类别下拉框
     async getObjectType() {
@@ -129,7 +130,10 @@ export default {
         });
         if (res && res.code === 2000) {
           this.objectTypeList = res.data.QueryTypeByVideoIdRsp;
-          this.searchByType(this.objectTypeList[0].objectType);
+          if(this.objectTypeList[0]!=null){
+            this.searchByType(this.objectTypeList[0].objectType);
+          }
+          // this.searchByType(this.objectTypeList[0].objectType);
         } else {
           this.$message.error("获取类别失败");
         }
@@ -150,7 +154,11 @@ export default {
           },
         });
         if (res && res.code === 2000) {
+          console.log(".,========================================")
           const QueryTrackRsp = res.data.QueryTrackRsp;
+          if(QueryTrackRsp.length==0){
+            this.objectTrackList=[]
+          }
           for (let i = 0; i < QueryTrackRsp.length; i++) {
             if (QueryTrackRsp[i].frameList) {
               const frameListItem = QueryTrackRsp[i].frameList.trim().split(" ");
@@ -158,8 +166,8 @@ export default {
                 objectModel: QueryTrackRsp[i].objectModel,
                 trackId: QueryTrackRsp[i].trackId,
                 frameList: frameListItem,
-                startFrame: frameListItem[frameListItem.length - 1],
-                endFrame: frameListItem[0],
+                endFrame: frameListItem[frameListItem.length - 1],
+                startFrame: frameListItem[0],
               };
             } else {
               this.objectTrackList[i] = {

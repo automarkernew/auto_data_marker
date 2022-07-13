@@ -7,7 +7,7 @@
 <script>
 import AILabel from "ailabel";
 import { ElMessage } from "element-plus";
-import { request } from "../../../js/axiosResquest.js";
+import { request , MINIO, TOKEN} from "../../../js/axiosResquest.js";
 // import TargetTrackDialog from "./TargetTrackDialog.vue"
 import infoImg from "../../../assets/tools/info.png";
 import TrackInfo from "./TrackInfo.vue";
@@ -47,10 +47,10 @@ export default {
       this.frame = frame;
       if (option == "mark") {
         this.imageUrl =
-          "http://localhost:9000/img/" + this.videoId + "/" + frame + ".jpg";
+          MINIO+"img/" + this.videoId + "/" + frame + ".jpg?token="+TOKEN;
       } else if (option == "track") {
         this.imageUrl =
-          "http://localhost:9000/motimg/" + this.videoId + "/" + frame + ".jpg";
+          MINIO+"motimg/" + this.videoId + "/" + frame + ".jpg?token="+TOKEN;
       }
       console.log(this.imageUrl);
       this.destroyMap();
