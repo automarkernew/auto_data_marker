@@ -166,8 +166,8 @@ export default {
                 objectModel: QueryTrackRsp[i].objectModel,
                 trackId: QueryTrackRsp[i].trackId,
                 frameList: frameListItem,
-                endFrame: frameListItem[frameListItem.length - 1],
-                startFrame: frameListItem[0],
+                startFrame: frameListItem[frameListItem.length - 1],
+                endFrame: frameListItem[0],
               };
             } else {
               this.objectTrackList[i] = {

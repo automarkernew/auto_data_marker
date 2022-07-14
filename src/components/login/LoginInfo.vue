@@ -5,8 +5,10 @@
       <img src="@/assets/login/userhead.png" />
       <input
         type="text"
-        placeholder="请输入您的账户名，邮箱或手机号"
+        placeholder="请输入您的账户名"
         v-model="userName"
+        :autofocus="isFocusOnUsername"
+        @keyup.enter.native="onClickLogin"
       />
     </div>
     <div class="inputbox">
@@ -15,9 +17,10 @@
         type="password"
         placeholder="请输入您的密码"
         v-model="userPassword"
+        @keyup.enter.native = "onClickLogin"
       />
     </div>
-    <div class="login" @click="onClickLogin"><div>登&nbsp&nbsp录</div></div>
+    <button class="login" @click="onClickLogin"><div>登&nbsp&nbsp录</div></button>
     <div class="register">
       <div class="assit"></div>
       <div @click="onClickRegister">&nbsp注&nbsp&nbsp册&nbsp</div>
@@ -34,6 +37,8 @@ export default {
   name: "LoginInfo",
   data() {
     return {
+      isFocusOnUsername: true,
+      // isFocusOnPassword: false,
       userName: "",
       userPassword: "",
       requestData: {
@@ -99,6 +104,7 @@ export default {
 						store.setUserNow(that.userName);
 						store.setToken(rsp.token);
 						store.setRefreshToken(rsp.refreshToken);
+            sessionStorage.setItem('state',JSON.stringify(store.state));
 						console.log("state信息监测", store.state);
             // 跳转到主页
             that.$router.push("/");
@@ -167,6 +173,7 @@ export default {
 }
 .login {
   /* border: 2px solid rgb(0,190,246); */
+  border:none;
   background-color: rgb(11, 161, 248);
   margin: 10px;
   padding: 10px;

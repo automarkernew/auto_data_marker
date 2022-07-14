@@ -105,6 +105,8 @@ export default {
             store.setRefreshToken({});
             store.setAuthentication(false);
             store.setUserNow("");
+            store.setDataClear();
+            sessionStorage.setItem('state',JSON.stringify(store.state));
             this.$router.replace("/login");
         },
         logIn(){
