@@ -10,11 +10,20 @@
 <script>
 import Header from "@/views/Header.vue";
 import { ElMessage } from "element-plus";
+import  store from "@/store"
 export default {
   data() {
     return {
      
     };
+  },
+  mounted(){
+    this.saveState();
+  },
+  methods:{
+    saveState(){
+      sessionStorage.setItem('state',JSON.stringify(store.state));
+    }
   },
   components: {
     Header,

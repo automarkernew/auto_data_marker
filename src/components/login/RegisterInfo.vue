@@ -3,15 +3,19 @@
     <div class="infotitle">用 户 注 册</div>
     <div class="inputbox">
       <img src="@/assets/login/userhead.png" />
-      <input type="text" placeholder="请输入您的账户名" v-model="userName" />
+      <input type="text" placeholder="请输入您的账户名" v-model="userName" 
+        @keyup.enter.native="onClickRegister"
+      />
     </div>
     <div class="inputbox">
       <img src="@/assets/login/userhead.png" />
-      <input type="text" placeholder="请输入您的手机号" v-model="userTele" />
+      <input type="text" placeholder="请输入您的手机号" v-model="userTele"
+        @keyup.enter.native="onClickRegister" />
     </div>
     <div class="inputbox">
       <img src="@/assets/login/userhead.png" />
-      <input type="text" placeholder="请输入您的邮箱" v-model="userEmail" />
+      <input type="text" placeholder="请输入您的邮箱" v-model="userEmail" 
+        @keyup.enter.native="onClickRegister"/>
     </div>
     <div class="inputbox">
       <img src="@/assets/login/passwordlock.png" />
@@ -19,6 +23,7 @@
         type="password"
         placeholder="请输入您的密码"
         v-model="userPassword"
+        @keyup.enter.native="onClickRegister"
       />
     </div>
     <div class="inputbox">
@@ -27,9 +32,10 @@
         type="password"
         placeholder="请再次输入您的密码"
         v-model.lazy="userPasswordAgain"
+        @keyup.enter.native="onClickRegister"
       />
     </div>
-    <div class="login" @click="onClickRegister"><div>注&nbsp&nbsp册</div></div>
+    <button class="login" @click="onClickRegister"  @keyup.enter.native="onClickRegister"><div>注&nbsp&nbsp册</div></button>
     <div class="register">
       <div class="assit"></div>
       <div @click="onClickLogin">&nbsp登&nbsp&nbsp录&nbsp</div>
@@ -41,6 +47,7 @@
 <script>
 import store from "@/store/index.js";
 import {request} from "@/js/axiosResquest"
+import { ElMessage } from "element-plus";
 export default {
   name: "RegisterInfo",
   data() {
@@ -63,6 +70,14 @@ export default {
     };
   },
   watch: {
+    userPassword() {
+      if(this.userPassword !== this.userPasswordAgain || this.userPassword ==null || this.userPassword ==""){
+        console.log("wrong password");
+        this.isPasswordCorrect = false;
+      }else{
+        this.isPasswordCorrect = true;
+      }
+    },
     userPasswordAgain() {
       if (this.userPassword !== this.userPasswordAgain) {
         console.log("wrong password");
@@ -81,8 +96,18 @@ export default {
     },
     async register() {
       let that = this;
+      if(this.userName == "" || this.userName == null){
+        ElMessage({
+          type:"error",
+          message:"请输入用户名"
+        });
+        return;
+      }
       if (!this.isPasswordCorrect) {
-        console.log("两次输入密码不一致！！！");
+        ElMessage({
+          type:"error",
+          message:"未输入密码或两次输入密码不一致"
+        })
         return;
       }
       this.requestData.RegisterReq.userName = this.userName;
@@ -162,6 +187,7 @@ export default {
 }
 .login {
   /* border: 2px solid rgb(0,190,246); */
+  border:none;
   background-color: rgb(11, 161, 248);
   margin: 10px;
   padding: 10px;

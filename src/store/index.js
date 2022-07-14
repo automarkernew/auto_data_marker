@@ -1,5 +1,6 @@
 const store = {
-  state: {
+  state: sessionStorage.getItem('state')?JSON.parse(sessionStorage.getItem('state')):
+  {
     token: {
       token: "",
       refresh: "",
@@ -26,6 +27,22 @@ const store = {
   setUserNow(value){
     this.state.userNow = value;
   },
+  setDataClear(){
+    this.state = {
+      token: {
+        token: "",
+        refresh: "",
+        expires: ""
+      },
+      refreshToken: {
+        token: "",
+        refresh: "",
+        expires: ""
+      },
+      isAuthenticated: false,
+      userNow: "",
+    }
+  }
 
 }
 
