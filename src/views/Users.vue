@@ -73,7 +73,8 @@
                   type="checkbox"
                   class="check"
                   :id="sth.row.userId"
-                  @input="choose(sth.row.userId)"
+                  :userName="sth.row.userName"
+                  @input="choose(sth.row.userId,sth.row.userName)"
               />
             </template>
           </el-table-column>
@@ -115,7 +116,7 @@
             </span>
                 </template>
               </el-dialog>
-              <el-button type="text" @click="userDelete(slotProps.row.userId)">删除</el-button>
+              <el-button type="text" @click="userDelete(slotProps.row.userId,slotProps.row.userName)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -136,12 +137,16 @@
 
 <script>
 import { request } from "../js/axiosResquest.js";
+import { ElMessage } from "element-plus";
+import store from "@/store/index.js";
 export default {
   name: "Users",
   components: {
   },
   data() {
     return {
+      userNow:store.state.userNow,
+      userIdNow:"",     //当下账号对应的用户id，在userQuery的时候进行赋值
       dataAmount: "",
       offset: "0",
       queryCount: "10",
@@ -218,6 +223,13 @@ export default {
             console.log("服务器异常");
             return;
           }
+          this.contents.forEach((item)=>{
+            console.log("item",item);
+            if(item.userName == this.userNow){
+              this.userIdNow = item.userId;
+              return ;
+            }
+          })
         }catch (error){
           console.log(error);
         }
@@ -230,15 +242,24 @@ export default {
       this.listUser(0,10)
     },
     // 批量删除
-    userDeleteDench(){
-      this.chosen.forEach((deleteId)=>{
-        this.userDelete(deleteId)
+    async userDeleteDench(){
+      let isHasUserNow = false;
+      await this.chosen.forEach((deleteId)=>{
+        if(deleteId == this.userIdNow){
+          console.log("delelted == this.userIdNow");
+          isHasUserNow = true;
+        }else{
+          this.userDelete(deleteId)
+        }
       })
+      if(isHasUserNow){
+        this.userDelete(this.userIdNow);
+      }
       this.chosen=[]
       console.log(this.chosen)
     },
     // 选择删除用户id
-    choose(value){
+    choose(value,userName){
         console.log("choose");
         console.log(value);
         if(this.chosen.indexOf(value) == -1){
@@ -345,7 +366,7 @@ export default {
       }
     },
     // 删除用户信息
-    async userDelete(value){
+    async userDelete(value,userName){
         console.log("delete");
         console.log(value);
         const UserDeleteReq = {
@@ -367,7 +388,21 @@ export default {
         }catch (error){
           console.log(error);
         }
+        if(userName == this.userNow  || value == this.userIdNow){
+          // 因为有的地方调用该方法时，有的传了value(userId)，有的传了userName，所以判断任一条件满足即可
+          console.log("username == usernow");
+          ElMessage({
+            type:"success",
+            message:"成功删除自身，正在退出登录"
+          })
+          store.setDataClear();
+          this.$router.push('/login');
+          return;
+        }
         this.userQuery()
+        // bug: 因为时异步请求，即使删除当前user的请求时最后发送的，但是仍有可能先删了userNow的token导致其他的删除不成功，或执行刷新时抛出“未找到用户”的异常
+        // 暂时的改法：在异步请求里加入await强行同步执行。
+
       },
     // 翻页
     current_change:function(currentPage){
