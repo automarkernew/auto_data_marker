@@ -484,7 +484,7 @@ export default {
         let tempImageUrlList = tempContentItem.imageUrlList;
         tempImageUrlList.forEach(
           (item, index)=>{
-            tempContentItem.imageUrlList[index] = MINIO+item+"?token="+TOKEN;
+            tempContentItem.imageUrlList[index] = MINIO+item;
             // console.log(tempContentItem.imageUrlList[index] );
           }
         );

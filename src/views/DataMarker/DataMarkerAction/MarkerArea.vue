@@ -62,16 +62,16 @@ export default {
             this.videoInformation=videoInformation
             this.option=option
             this.videoId=videoInformation.videoId
-            this.frameNumber=this.getFrameNumber(this.videoId)
+            this.frameNumber=  this.getFrameNumber(this.videoId)
             this.imgHeight=videoInformation.height
             this.imgWidth=videoInformation.width
             this.frame=frame
             if(option=="mark"){
-                this.imageUrl=MINIO+"img/"+this.videoId+"/"+frame+".jpg?token="+TOKEN
+                this.imageUrl=MINIO+"img/"+this.videoId+"/"+frame+".jpg"
             }
             else if(option=="track"){
                 var timestamp = Date.parse(new Date())
-                this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"+"?"+timestamp+"?token="+TOKEN
+                this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"+"?"+timestamp
             }
             console.log("imgheight:",this.imgHeight,"imgwidth:",this.imgWidth)
             this.destroyMap()
@@ -671,20 +671,27 @@ export default {
             this.initMap(this.videoInformation,this.frame,this.option) 
             this.tracker(this.frame)
         },
-        getFrameNumber(videoId) {
-            const files = require
-                .context("/home/hdtx/code/minio_server/img", true, /.jpg$/)
-                .keys();
-            var i = 1;
-            files.forEach((filePath) => {
-                var tmp = filePath.substring(0, filePath.lastIndexOf("/"));
-                if (tmp.substring(tmp.lastIndexOf("/") + 1, tmp.length) == videoId) {
-                
-                i++;
-                }
-            });
-            return i - 1;
-        },
+       async  getFrameNumber(videoId) {
+       try {
+        const res = await request({
+          url: "/videoInformation/queryVideoLength",
+          method: "post",
+          data: {
+            VideoLengthReq :  {
+              videoId
+            },
+          },
+        });
+        console.log("res.data:", res);
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
+        }
+        this.frameNumber = res.data.VideoLengthRsp.length
+      } catch (error) {
+        console.log(error);
+      }
+    },
     }
 }
 

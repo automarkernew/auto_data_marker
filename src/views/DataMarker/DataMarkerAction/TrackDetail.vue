@@ -47,10 +47,10 @@ export default {
       this.frame = frame;
       if (option == "mark") {
         this.imageUrl =
-          MINIO+"img/" + this.videoId + "/" + frame + ".jpg?token="+TOKEN;
+          MINIO+"img/" + this.videoId + "/" + frame + ".jpg";
       } else if (option == "track") {
         this.imageUrl =
-          MINIO+"motimg/" + this.videoId + "/" + frame + ".jpg?token="+TOKEN;
+          MINIO+"motimg/" + this.videoId + "/" + frame + ".jpg";
       }
       console.log(this.imageUrl);
       this.destroyMap();

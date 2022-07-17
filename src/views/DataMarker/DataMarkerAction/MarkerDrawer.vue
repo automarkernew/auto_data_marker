@@ -289,7 +289,7 @@ export default {
           this.fileList = res.data.VisibleTaggingLoadFileRsp;
           this.fileList.forEach((rec) => {
             rec.imgUrl =
-              MINIO + rec.imageUrl + rec.frame + ".jpg?token="+TOKEN;
+              MINIO + rec.imageUrl + rec.frame + ".jpg";
           });
         } else {
           this.$message.error("请求标注文件失败");
@@ -310,18 +310,27 @@ export default {
       this.$emit("showImg", videoId, frame, trackId, height, width);
     },
     // 获取视频帧总数
-    getFrameNumber(videoId) {
-      const files = require
-        .context("/home/hdtx/code/minio_server/motimg", true, /.jpg$/)
-        .keys();
-      var i = 0;
-      files.forEach((filePath) => {
-        var tmp = filePath.substring(0, filePath.lastIndexOf("/"));
-        if (tmp.substring(tmp.lastIndexOf("/") + 1, tmp.length) == videoId) {
-          i++;
+   async  getFrameNumber(videoId) {
+       try {
+        const res = await request({
+          url: "/videoInformation/queryVideoLength",
+          method: "post",
+          data: {
+            VideoLengthReq :  {
+              videoId
+            },
+          },
+        });
+        console.log("res.data:", res);
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
         }
-      });
-      return i;
+        this.frameNumber = res.data.VideoLengthRsp.length
+      } catch (error) {
+        console.log(error);
+      }
+      return this.frameNumber
     },
     // 超过当前时间不可选
     disabledDate(time) {

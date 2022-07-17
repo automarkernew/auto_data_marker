@@ -232,10 +232,11 @@ export default {
     };
   },
   watch: {},
-  mounted() {
+ async mounted() {
     this.videoInformation = JSON.parse(this.$route.params.data);
+    // console.log(this.videoInformation)
     this.videoId = this.videoInformation.videoId;
-    this.frameNumber = this.getFrameNumber(this.videoId);
+   this.frameNumber =  await this.getFrameNumber(this.videoId);
     this.videoDescription ="   拍摄时间：" +
       this.handleTimestamp(this.videoInformation.shootTime) +
       "拍摄地点："+
@@ -254,7 +255,7 @@ export default {
     //如果视频已经进行轨迹跟踪，则获取轨迹跟踪后的图片
     if (this.tracked == "1") {
       this.option = "track";
-      this.frame = this.frameNumber;
+      this.frame = this.frameNumber
       this.$refs.markerarea.initMap(
         this.videoInformation,
         this.frame,
@@ -281,24 +282,37 @@ export default {
     );
   },
   methods: {
-    getFrameNumber(videoId) {
-      const files = require
-        .context("/home/hdtx/code/minio_server/img", true, /.jpg$/)
-        .keys();
-      var i = 1;
-      files.forEach((filePath) => {
-        var tmp = filePath.substring(0, filePath.lastIndexOf("/"));
-        if (tmp.substring(tmp.lastIndexOf("/") + 1, tmp.length) == videoId) {
-          const imgPath = {
-            src: MINIO+"img/"+ videoId + "/" + i + ".jpg?token="+store.state.token.token,
+   async  getFrameNumber(videoId) {
+       try {
+        const res = await request({
+          url: "/videoInformation/queryVideoLength",
+          method: "post",
+          data: {
+            VideoLengthReq :  {
+              videoId
+            },
+          },
+        });
+        console.log("res.data:", res);
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
+        }
+      this.frameNumber = parseInt(res.data.VideoLengthRsp.length)
+      this.imgArr=[]
+      for(var i=1;i<this.frameNumber+1;i++){
+        const imgPath = {
+            src: MINIO+"img/"+ videoId + "/" + i + ".jpg",
             index: i,
           };
-          console.log(imgPath)
-          this.imgArr.push(imgPath);
-          i++;
-        }
-      });
-      return i - 1;
+        console.log(imgPath)
+        this.imgArr.push(imgPath);
+      }
+      return await this.frameNumber
+      } catch (error) {
+        console.log(error);
+      }
+      
     },
 
     // 打开手动分类弹窗

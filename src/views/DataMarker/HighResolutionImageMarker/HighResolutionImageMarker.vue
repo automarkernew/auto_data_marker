@@ -155,11 +155,11 @@ export default {
   },
   watch:{
   },
-  mounted(){
+  async mounted(){
     this.videoInformation=JSON.parse(this.$route.params.data)
     // console.log(this.videoInformation)
     this.videoId=this.videoInformation.videoId
-    this.frameNumber=this.getFrameNumber(this.videoId)
+    this.frameNumber=await this.getFrameNumber(this.videoId)
     console.log(this.frameNumber)
     this.videoDescription=this.handleTimestamp(this.videoInformation.shootTime)+"   拍摄时间："+this.videoInformation.shootPlace+"     传感器类别："+this.handleSensorType(this.videoInformation.sensorType)
     this.frame="1"
@@ -189,23 +189,35 @@ export default {
     this.$refs.markerarea.initMap(this.videoInformation,this.frame,this.option)
   },
   methods: {
-    getFrameNumber(videoId){
-      const files = require.context("/home/hdtx/code/minio_server/img", true, /.jpg$/).keys();
-      // console.log(files)
-      var i=1
-      files.forEach((filePath)=>{
-        var tmp=filePath.substring(0,filePath.lastIndexOf("/"))
-        // console.log(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length))
-        if(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length)==videoId){
-          const imgPath ={
-            src:MINIO+"img/"+videoId+"/"+i+".jpg?token="+TOKEN,
-            index: i
-          }
-          this.imgArr.push(imgPath)
-          i++
+   async  getFrameNumber(videoId) {
+       try {
+        const res = await request({
+          url: "/videoInformation/queryVideoLength",
+          method: "post",
+          data: {
+            VideoLengthReq :  {
+              videoId
+            },
+          },
+        });
+        console.log("res.data:", res);
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
         }
-      })
-      return i-1
+        this.frameNumber = res.data.VideoLengthRsp.length
+      } catch (error) {
+        console.log(error);
+      }
+      for(var i=1;i<parseInt(this.frameNumber)+1;i++){
+        const imgPath = {
+            src: MINIO+"img/"+ videoId + "/" + i + ".jpg",
+            index: i,
+          };
+        console.log(imgPath)
+        this.imgArr.push(imgPath);
+      }
+      return  this.frameNumber
     },
     // 打开手动分类弹窗
     openClassificationDialog() {

@@ -124,15 +124,16 @@ export default{
   },
   watch:{
   },
-  mounted(){
+  async mounted(){
     //载入红外光视频后需要与对应的可见光视频做配对
     this.videoInformation=JSON.parse(this.$route.params.data)//接收从标注信息列表页面得到的红外光视频数据
     this.videoId=this.videoInformation.videoId
     this.LinkedVideoId=this.videoInformation.typeLinkId //获取关联的可见光视频
     //查看关联的可见光视频状态
     this.checkVisibleVideoStatus(this.LinkedVideoId)
-    this.frameNumber=this.getFrameNumber(this.videoId)
-    this.visibleVideoFrameNumber=this.getFrameNumber(this.LinkedVideoId)
+    this.frameNumber=await this.getFrameNumber(this.videoId)
+    this.visibleVideoFrameNumber=await this.getFrameNumber(this.LinkedVideoId)
+    // this.visibleVideoFrameNumber=this.getVisibleFrameNumber(this.LinkedVideoId)
     this.videoDescription=this.handleTimestamp(this.videoInformation.shootTime)+"   拍摄时间："+this.videoInformation.shootPlace+"     传感器类别："+this.handleSensorType(this.videoInformation.sensorType)
     this.frame="1"
     this.$refs.classificationQuery.init(this.videoInformation)
@@ -142,25 +143,36 @@ export default{
    
   },
   methods: {
-    getFrameNumber(videoId){
-      this.imgArr=[]
-      const files = require.context("/home/hdtx/code/minio_server/motimg", true, /.jpg$/).keys();
-        // console.log(files)
-        var i=1
-      files.forEach((filePath)=>{
-        var tmp=filePath.substring(0,filePath.lastIndexOf("/"))
-        // console.log(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length))
-        if(tmp.substring(tmp.lastIndexOf("/")+1,tmp.length)==videoId){
-          const imgPath ={
-          src: MINIO +"img/"+videoId+"/"+i+".jpg",
-            index: i
-          }
-          this.imgArr.push(imgPath)
-          i++
+    async  getFrameNumber(videoId) {
+       try {
+        const res = await request({
+          url: "/videoInformation/queryVideoLength",
+          method: "post",
+          data: {
+            VideoLengthReq :  {
+              videoId
+            },
+          },
+        });
+        console.log("res.data:", res);
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
         }
-      })
-      console.log("==============================",i)
-      return i-1
+        this.frameNumber = res.data.VideoLengthRsp.length
+      } catch (error) {
+        console.log(error);
+      }
+      this.imgArr=[]
+      for(var i=1;i<parseInt(this.frameNumber)+1;i++){
+        const imgPath = {
+            src: MINIO+"img/"+ videoId + "/" + i + ".jpg",
+            index: i,
+          };
+        console.log(imgPath)
+        this.imgArr.push(imgPath);
+      }
+      return this.frameNumber
     },
     async initVideo(VideoId){
       const VideoInformationQueryByIdReq = {
