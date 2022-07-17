@@ -70,8 +70,8 @@ export default {
                 this.imageUrl=MINIO+"img/"+this.videoId+"/"+frame+".jpg"
             }
             else if(option=="track"){
-                var timestamp = Date.parse(new Date())
-                this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"+"?"+timestamp
+                // var timestamp = Date.parse(new Date())
+                this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"
             }
             console.log("imgheight:",this.imgHeight,"imgwidth:",this.imgWidth)
             this.destroyMap()
