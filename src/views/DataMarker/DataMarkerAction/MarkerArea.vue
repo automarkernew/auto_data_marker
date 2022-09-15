@@ -71,7 +71,7 @@ export default {
                 this.imageUrl=MINIO+"img/"+this.videoId+"/"+frame+".jpg"
             }
             else if(option=="track"){
-                console.log("initmap================",frame)
+                // console.log("initmap================",frame)
                 this.imageUrl=MINIO+"motimg/"+this.videoId+"/"+frame+".jpg"
             }
             console.log("imgheight:",this.imgHeight,"imgwidth:",this.imgWidth,"imageUrl",this.imageUrl)

@@ -343,6 +343,7 @@ export default {
             "image/jpeg",
             "image/jpg",
             "image/png",
+            "image/tiff",
           ].indexOf(file.raw.type) == -1
         ) {
           this.fileLegal = false;
@@ -371,6 +372,7 @@ export default {
             "image/jpeg",
             "image/jpg",
             "image/png",
+            "image/tiff",
           ].indexOf(file.raw.type) == -1
         ) {
           this.fileLegal = false;

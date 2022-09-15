@@ -356,6 +356,7 @@ export default{
     },
     imageRegistration(){
         //图像配准
+        //判断视频是否已经配准
         this.$nextTick(()=>{
           this.$refs.InfraredImageRegister.openDialog(this.videoInformation,this.visibleVideoInfo)
         }

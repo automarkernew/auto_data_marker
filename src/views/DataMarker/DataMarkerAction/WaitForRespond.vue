@@ -8,7 +8,7 @@
     before-close="beforeClose"
     title="等待中，请稍后..."
   >
-    <el-progress :percentage="100"  :indeterminate="true" width="100%" />
+    <!-- <el-progress :percentage="100"  :indeterminate="true" width="100%" /> -->
   </el-dialog>
 </template>
 
