@@ -249,9 +249,58 @@ export default{
             )
             gMap.getLayers()[2].addText(gText);
         },
+        checkPointValid(){
+            //检查红外光点与可见光点是否合法
+            let pointLength = this.infraPoint.length
+            //两个点数组长度不同的情况
+            if(this.infraPoint.length>this.visPoint.length){
+                
+                pointLength = this.visPoint.length
+                this.infraPoint.splice(this.visPoint.length, this.infraPoint.length - this.visPoint.length)
+            }else if(this.infraPoint.length < this.visPoint.length){
+                pointLength = this.infraPoint.length
+                this.visPoint.splice(this.infraPoint.length, this.visPoint.length - this.infraPoint)
+            }
+            //1.两个点对象数组长度是否大于等于4
+            if(pointLength < 4){
+                ElMessage({
+                    message: "配准点个数至少为4",
+                    type: "warning",
+                });
+                return false
+            }
+            //2.每个点是否在两种图像上一一对应
+            //数组中有空白点的情况
+           let  blankPointCount = 0
+            for(let i=0; i<pointLength - blankPointCount; i++){
+                if((this.infraPoint[i].x == "" && this.visPoint[i].x !="") || this.infraPoint[i].x != "" && this.visPoint[i].x == ""){
+                    ElMessage({
+                        message: "红外配准点与可见光配准点未一一对应",
+                        type: "warning",
+                    });
+                    return false
+                }
+                if(this.infraPoint[i].x == "" && this.visPoint[i].x == ""){
+                    this.infraPoint.splice(i,1)
+                    this.visPoint.splice(i,1)
+                    blankPointCount++
+                }
+            }
+            if(pointLength - blankPointCount < 4){
+                ElMessage({
+                    message: "配准点个数至少为4",
+                    type: "warning",
+                });
+                return false
+            }
+            return true
+        },
         // 画点发送配准请求
         async infraredRegister(){
             //检验配准点是否符合
+            if(!this.checkPointValid()){
+                return
+            }
             try {
                 this.$refs.WaitForRespond.openDialog();
                 const res = await request({
