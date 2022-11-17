@@ -107,7 +107,7 @@ export default {
             sessionStorage.setItem('state',JSON.stringify(store.state));
 						console.log("state信息监测", store.state);
             // 跳转到主页
-            that.$router.push("/");
+            that.$router.push("/dataMarkerInformation");
           }
         }
       } catch (error) {
