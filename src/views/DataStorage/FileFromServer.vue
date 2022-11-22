@@ -75,8 +75,8 @@ export default {
           },
         });
         console.log("dataset", res);
+        this.datasetList=[]
         res.data.GetDataListFromServerRsp.forEach((element) => {
-         this.datasetList=[]
          if(element.type=="0"){
           this.datasetList.push(element.dataListName)
          }
