@@ -388,6 +388,7 @@ export default{
         console.log("res.data:", res);
         if (res.code != 2000) {
           console.log("服务器异常");
+          this.$refs.WaitForRespond.closeDialog();
           return;
         }
         ElMessage.success("标注成功");
