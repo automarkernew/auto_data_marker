@@ -87,10 +87,6 @@ export default {
                     title: "数据存储",
                 },
                 {
-                    index: "/algorithm",
-                    title: "算法管理",
-                },
-                {
                     index: "/users",
                     title: "用户管理",
                 },
