@@ -17,6 +17,7 @@
                 {{ header.title }}
                 </el-button>
             </div>
+            
             <div class="head_right">
                 <span class="dateTime">{{dateTime}}</span>
                 <div v-if="isAuthen">
@@ -28,8 +29,11 @@
                     <div v-on:click="logIn()">登录/注册</div>
                     
                 </div>
+                <span  style = "font-size: 25px; ">版本号v1.0</span>
             </div>
+           
         </div>
+        
         <div style="margin-left:10px">
             <el-tabs
             v-model="editableTabsValue"
