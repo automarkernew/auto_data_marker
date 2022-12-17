@@ -147,7 +147,7 @@
                 </div>
             </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               prop="tagUserId"
               label="目标跟踪用户"
               class="tableColumn"
@@ -161,7 +161,7 @@
               prop="tagTime"
               label="标注时间"
               class="tableColumn"
-            />
+            /> -->
             <el-table-column label="操作" class="tableColumn">
               <template v-slot="scope">
                 <el-button type="primary" @click="checkitem(scope.row)" style="width:40px">查看</el-button>

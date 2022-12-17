@@ -468,21 +468,25 @@ export default {
        }
        try {
         const res = await request({
-          url: "",
+          url: "/videoInformation/download",
           method: "post",
-          data: item.videoId,
+          data: {
+            VideoInformationDownload:
+            {
+              videoId: item.videoId
+            }
+          },
           responseType: "blob",
         });
         console.log("res.data:", res);
-        let blob = new Blob([response.data], { type: "application/zip" });
+        let blob = new Blob([res],{ type: "application/zip;charset-UTF-8"})
           let url = window.URL.createObjectURL(blob);
           const link = document.createElement("a"); // 创建a标签
           link.href = url;
-          link.download = "标注下载"; // 重命名文件
+          link.download = "download"; // 重命名文件
           link.click();
           URL.revokeObjectURL(url); // 释放内存
-
-        if (res.code != 2000) {
+        if (res.size == 0) {
           console.log("服务器异常");
           return;
         } else {
