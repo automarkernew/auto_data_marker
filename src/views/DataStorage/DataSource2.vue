@@ -188,7 +188,7 @@
                 <span
                   @click="downloadItem(scope.row)"
                   style="margin-right: 10px; color: rgb(86, 169, 255)"
-                  >下载</span
+                  >标注下载</span
                 >
               </template>
             </el-table-column>
@@ -224,6 +224,7 @@ import { request } from "@/js/axiosResquest";
 import Preview from "@/components/Preview.vue";
 import uploadVideo from "./uploadVideo.vue";
 import {handleTimestamp} from "@/js/handleTimeStamp"
+import { ElMessage } from "element-plus";
 
 export default {
   components: {
@@ -456,6 +457,45 @@ export default {
         }
       }
     },
+    
+   async downloadItem(item){
+       if(item.tagStatus!="F"){
+            ElMessage({
+                  message: "文件尚未完成标注无法下载",
+                  type: "warning",
+              });
+              return
+       }
+       try {
+        const res = await request({
+          url: "",
+          method: "post",
+          data: item.videoId,
+          responseType: "blob",
+        });
+        console.log("res.data:", res);
+        let blob = new Blob([response.data], { type: "application/zip" });
+          let url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a"); // 创建a标签
+          link.href = url;
+          link.download = "标注下载"; // 重命名文件
+          link.click();
+          URL.revokeObjectURL(url); // 释放内存
+
+        if (res.code != 2000) {
+          console.log("服务器异常");
+          return;
+        } else {
+          ElMessage({
+            message: "下载成功",
+            type: "success",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    
     uploadSourceSuccess() {
       console.log("DataSource -----uploadSourceSuccess");
       this.uploadSourceOpen = false;
